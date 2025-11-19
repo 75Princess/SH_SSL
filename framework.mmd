@@ -1,0 +1,40 @@
+graph TD
+  A["main.py"] --> B["running.py"]
+  A2["main_st.py"] --> B2["running_st.py"]
+
+  B --> K["utils.Data_Loader"]
+  B2 --> K2["utils.Data_Loader"]
+
+  B --> E["EEG2Rep"]
+  B2 --> E2["EEG2Rep"]
+
+  E --> F["ShapeletsDistBlocks"]
+  E2 --> F
+
+  E --> P["Predictor"]
+  E --> P2["Predictor_2"]
+  E --> PH["predict_head"]
+
+  B --> T["Self_Supervised_Trainer"]
+  B --> S["SupervisedTrainer"]
+
+  T --> L["align/std/cov 损失"]
+  T --> O["optimizers.RAdam"]
+  T --> R1["SS_train_runner"]
+
+  S --> CE["Models.loss.NoFussCrossEntropyLoss"]
+  S --> O2["optimizers.RAdam"]
+  S --> R2["Strain_runner"]
+
+  B --> EV["eval.fit_lr / t-SNE 可视化"]
+
+  B2 --> TS["trainer_st"]
+  TS --> VL["VICReg 正则"]
+  TS --> M["MSELoss(重建)"]
+  TS --> OA["AdamW 优化器"]
+  TS --> OC["OneCycleLR 调度"]
+  TS --> EMA["momentum_update(EMA)"]
+
+  B2 --> EVAL["evaluation.py(下游SVM评估)"]
+  EVAL --> MET["Accuracy/F1/AUROC/Confusion Matrix"]
+  MET --> OUT["Results/*(日志与配置)"]
